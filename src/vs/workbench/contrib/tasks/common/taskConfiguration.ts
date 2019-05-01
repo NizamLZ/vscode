@@ -10,6 +10,7 @@ import { IStringDictionary } from 'vs/base/common/collections';
 import { Platform } from 'vs/base/common/platform';
 import * as Types from 'vs/base/common/types';
 import * as UUID from 'vs/base/common/uuid';
+import { normalize } from 'vs/base/common/path';
 
 import { ValidationStatus, IProblemReporter as IProblemReporterBase } from 'vs/base/common/parsers';
 import {
@@ -1338,6 +1339,9 @@ namespace ConfiguringTask {
 				'Error: the task configuration \'{0}\' is missing the required property \'type\'. The task configuration will be ignored.', JSON.stringify(external, undefined, 0)
 			));
 			return undefined;
+		}
+		if (identifier.type === 'typescript' && identifier.tsconfig) {
+			identifier.tsconfig = normalize(identifier.tsconfig);
 		}
 		let taskIdentifier: Tasks.KeyedTaskIdentifier | undefined = Tasks.TaskDefinition.createTaskIdentifier(identifier, context.problemReporter);
 		if (taskIdentifier === undefined) {
